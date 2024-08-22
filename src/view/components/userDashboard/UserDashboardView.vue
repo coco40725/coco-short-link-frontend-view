@@ -40,9 +40,7 @@ onMounted(async () => {
    if (!isLogin.value) {
        await router.push({name: 'Login'})
    }
-   if (!isShortLinkInfoLoaded.value) {
-       await handleGetUserShortLinkInfo()
-   }
+   await handleGetUserShortLinkInfo()
 })
 </script>
 
