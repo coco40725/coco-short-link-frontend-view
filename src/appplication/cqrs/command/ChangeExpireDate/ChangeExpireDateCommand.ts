@@ -1,9 +1,13 @@
-export default class ChangeExpireDateCommand{
+import {Command} from "@/appplication/cqrs/command/base/Command";
+
+export default class ChangeExpireDateCommand implements Command<Promise<void>>{
     id: string;
     expireDate: Date;
+    type: string;
 
-    constructor(id: string, expirationDate: Date) {
+    constructor(id: string, expirationDate: Date, type: string) {
         this.id = id;
         this.expireDate = expirationDate;
+        this.type = type;
     }
 }

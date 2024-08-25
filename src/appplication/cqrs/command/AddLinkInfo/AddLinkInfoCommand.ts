@@ -1,5 +1,7 @@
+import LinkInfo from "@/domain/model/LinkInfo";
+import {Command} from "@/appplication/cqrs/command/base/Command";
 
-export default class AddLinkInfoCommand {
+export default class AddLinkInfoCommand implements Command<Promise<LinkInfo>> {
      shortLink: string = null;
      originalLink: string = null;
      expirationDate: Date = null;

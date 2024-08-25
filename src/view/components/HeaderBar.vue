@@ -1,15 +1,10 @@
 <script lang="ts" setup>
 import {computed, onMounted, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import {useUserInfoStore} from "@/domain/store/UserInfo.store";
 import {storeToRefs} from "pinia";
-import {handleLogout} from "@/appplication/cqrs/command/Logout/LogoutHandler";
-import {validateAddLinkInfo} from "@/appplication/cqrs/command/AddLinkInfo/AddLinkInfoValidate";
-import {validateLogout} from "@/appplication/cqrs/command/Logout/LogoutValidate";
-import {useToastAlertStore} from "@/domain/store/ToastAlert.store";
-import {handleAddLinkInfo} from "@/appplication/cqrs/command/AddLinkInfo/AddLinkInfoHandler";
-const userInfoStore = useUserInfoStore()
-const toastAlertStore = useToastAlertStore()
+import {LogoutCommand} from "@/appplication/cqrs/command/Logout/LogoutCommand";
+import {CommandFactory} from "@/appplication/cqrs/command/base/CommandFactory";
+import {commandFactory, toastAlertStore, userInfoStore} from "@/main";
 const {user, isLogin} = storeToRefs(userInfoStore)
 
 const route = useRoute()
@@ -29,9 +24,13 @@ const clickNav = (name: string) => {
     })
 }
 const logout = async () => {
-    const validateResult = validateLogout()
+    const command = new LogoutCommand()
+    const validator = commandFactory.getCommandValidator(command)
+    const handler = commandFactory.getCommandHandler(command)
+    const validateResult = validator.validate(command)
     if (!validateResult.isValid) {
-        const msg = validateResult.errorMessage[0]
+        const errorCode = validateResult.errorCode[0]
+        const msg = validator.getValidationMessage(errorCode)
         toastAlertStore.setMsg(msg)
         toastAlertStore.openToast()
         return
@@ -39,7 +38,7 @@ const logout = async () => {
 
     // call api
     try {
-        await handleLogout()
+        await handler.handle(command)
         await router.push({name: 'Home'})
 
     } catch (e) {

@@ -1,6 +1,7 @@
 import {ProviderType} from "@/domain/enums/ProviderType";
+import {Command} from "@/appplication/cqrs/command/base/Command";
 
-export default class LoginCommand {
+export class LoginCommand implements Command<Promise<void>> {
     idToken: string = null;
     email: string = null;
     password: string = null;

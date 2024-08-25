@@ -3,9 +3,12 @@
 
 import {computed, onMounted, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import {handleGetUserShortLinkInfo} from "@/appplication/cqrs/query/GetUserLinkStat/GetUserLinkStatHandler";
 import LinkStat from "@/domain/model/LinkStat";
 import DateUtils from "@/infra/Utils/DateUtils";
+import {QueryFactory} from "@/appplication/cqrs/query/base/QueryFactory";
+import {GetUserShortLinkQuery} from "@/appplication/cqrs/query/GetUserShortLinkInfo/GetUserShortLinkQuery";
+import {GetUserLinkStatQuery} from "@/appplication/cqrs/query/GetUserLinkStat/GetUserLinkStatQuery";
+import {queryFactory} from "@/main";
 
 const router = useRouter()
 const route = useRoute()
@@ -83,7 +86,10 @@ const initUserAgentData = (linkStat: LinkStat) => {
 }
 
 onMounted(async () => {
-    const linkStat  = await handleGetUserShortLinkInfo(shortLink.value)
+    const link = shortLink.value as string
+    const query = new GetUserLinkStatQuery(link)
+    const handler = queryFactory.getQueryHandler(query)
+    const linkStat  = await handler.handle(query)
     if (linkStat != null) {
         initRefererData(linkStat)
         initIpData(linkStat)

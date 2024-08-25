@@ -1,25 +1,20 @@
 <script lang="ts" setup>
 import {ref, watch} from "vue";
-import {useUserInfoStore} from "@/domain/store/UserInfo.store";
 import {storeToRefs} from "pinia";
-import {handleDisabledLinkInfo} from "@/appplication/cqrs/command/DisabledLinkInfo/DisabledLinkInfoHandler";
-import {handleChangeLinkInfo} from "@/appplication/cqrs/command/ChangeOriginLink/ChangeOriginLinkHandler";
 import ChangeOriginLinkCommand from "@/appplication/cqrs/command/ChangeOriginLink/ChangeOriginLinkCommand";
 import QRCodeUtils from "@/infra/Utils/QRCodeUtils";
 import QrcodeVue from 'qrcode.vue'
-import {useToastSuccessStore} from "@/domain/store/ToastSuccess.store";
 import DateUtils from "../../../infra/Utils/DateUtils";
 import LinkInfo from "@/domain/model/LinkInfo";
 import ChangeExpireDateCommand from "@/appplication/cqrs/command/ChangeExpireDate/ChangeExpireDateCommand";
-import {handleChangeExpireDate} from "@/appplication/cqrs/command/ChangeExpireDate/ChangeExpireHandler";
 import {LinkType} from "@/domain/enums/LinkType";
 import moment from "moment";
 import '@vuepic/vue-datepicker/dist/main.css';
 import {useRouter} from "vue-router";
+import {DisabledLinkInfoCommand} from "@/appplication/cqrs/command/DisabledLinkInfo/DisabledLinkInfoCommand";
+import {commandFactory, toastSuccessStore, userInfoStore} from "@/main";
 
 const router = useRouter()
-const userInfoStore = useUserInfoStore()
-const toastSuccessStore = useToastSuccessStore()
 const { enabledShortLink, isShortLinkInfoLoaded } = storeToRefs(userInfoStore)
 
 
@@ -47,7 +42,8 @@ const openOriginLinkEdit = (urlInfo: LinkInfo) => {
 const confirmOriginLinkEdit = async (urlInfo: LinkInfo) => {
     cleanEditLinkInfo()
     const command = new ChangeOriginLinkCommand(urlInfo.id, urlInfo.originalLink)
-    await handleChangeLinkInfo(command)
+    const handler = commandFactory.getCommandHandler(command)
+    await handler.handle(command)
 }
 const cancelOriginLinkEdit = (urlInfo: LinkInfo) => {
     cleanEditLinkInfo()
@@ -89,8 +85,9 @@ const confirmExpireDateEdit = async (urlInfo: LinkInfo) => {
     cleanEditLinkInfo()
     tmpExpireDate = null
     tmpExpireTime = null
-    const command = new ChangeExpireDateCommand(urlInfo.id, urlInfo.expirationDate)
-    await handleChangeExpireDate(command, LinkType.ENABLED)
+    const command = new ChangeExpireDateCommand(urlInfo.id, urlInfo.expirationDate, LinkType.ENABLED)
+    const handler = commandFactory.getCommandHandler(command)
+    await handler.handle(command)
 }
 const cancelExpireDateEdit = (urlInfo: LinkInfo) => {
     cleanEditLinkInfo()
@@ -110,7 +107,9 @@ const changeExpireType = (expire: boolean) => {
 
 // action
 const disableLink = async (id: string) => {
-    await handleDisabledLinkInfo(id)
+    const command = new DisabledLinkInfoCommand(id)
+    const handler = commandFactory.getCommandHandler(command)
+    await handler.handle(command)
 }
 
 // copy short link

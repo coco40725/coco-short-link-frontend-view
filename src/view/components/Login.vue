@@ -1,25 +1,24 @@
 <script lang="ts" setup>
 
 import {GoogleLogin} from "vue3-google-login";
-import {validateLogin} from "@/appplication/cqrs/command/Login/LoginValidate";
-import LoginCommand from "@/appplication/cqrs/command/Login/LoginCommand";
-import {useToastAlertStore} from "@/domain/store/ToastAlert.store";
-import {handleLogin} from "@/appplication/cqrs/command/Login/LoginHandler";
 import {ProviderType} from "@/domain/enums/ProviderType";
 import ToastAlert from "@/view/components/toast/ToastAlert.vue";
 import {useRouter} from "vue-router";
 import {useCookies} from "vue3-cookies";
+import {LoginCommand} from "@/appplication/cqrs/command/Login/LoginCommand";
+import {commandFactory, toastAlertStore} from "@/main";
 const router = useRouter()
-
-const toastAlertStore = useToastAlertStore()
 
 
 const googleLoginCallBack = async (response: any) => {
     const credential = response.credential
     const command = new LoginCommand(null, null, ProviderType.GOOGLE, credential)
-    const validateResult = validateLogin(command)
+    const validator = commandFactory.getCommandValidator(command)
+    const handler = commandFactory.getCommandHandler(command)
+    const validateResult = validator.validate(command)
     if (!validateResult.isValid) {
-        const msg = validateResult.errorMessage[0]
+        const errorCode = validateResult.errorCode[0]
+        const msg = validator.getValidationMessage(errorCode)
         toastAlertStore.setMsg(msg)
         toastAlertStore.openToast()
         return
@@ -27,7 +26,7 @@ const googleLoginCallBack = async (response: any) => {
 
     // call API to login
     try {
-        await handleLogin(command)
+        await handler.handle(command)
         await router.push({name: 'User'})
 
 

@@ -1,19 +1,18 @@
 <script lang="ts" setup>
-import {useUserInfoStore} from "@/domain/store/UserInfo.store";
 import {storeToRefs} from "pinia";
 import {onMounted, ref} from "vue";
 import {useRouter} from "vue-router";
+import {QueryFactory} from "@/appplication/cqrs/query/base/QueryFactory";
+import {GetUserShortLinkQuery} from "@/appplication/cqrs/query/GetUserShortLinkInfo/GetUserShortLinkQuery";
+import {createLinkModalStore, userInfoStore} from "@/main";
 import EnableLinkInfo from "@/view/components/userDashboard/EnableLinkInfo.vue";
-import {handleGetUserShortLinkInfo} from "@/appplication/cqrs/query/GetUserShortLinkInfo/GetUserShortLinkHandler";
-import DisableLinkInfo from "@/view/components/userDashboard/DisableLinkInfo.vue";
 import CreateLinkInfo from "@/view/components/userDashboard/modal/CreateLinkInfo.vue";
-import {useCreateLinkModalStore} from "@/domain/store/CreateLinkModal.store";
+import DisableLinkInfo from "@/view/components/userDashboard/DisableLinkInfo.vue";
 
-const userInfoStore = useUserInfoStore()
-const createLinkInfoStore = useCreateLinkModalStore()
 const {user, isLogin, isShortLinkInfoLoaded, enabledShortLink, disabledShortLink} = storeToRefs(userInfoStore)
-const { showModal } = storeToRefs(createLinkInfoStore)
+const { showModal } = storeToRefs(createLinkModalStore)
 const router = useRouter()
+const queryFactory = new QueryFactory()
 
 // tab link
 const tabLinks = ref([
@@ -33,14 +32,16 @@ const changeTab = (tabId: string) => {
 }
 const openCreateLinkModal = () => {
     console.log('open add link modal')
-    createLinkInfoStore.openModal()
+    createLinkModalStore.openModal()
 }
 
 onMounted(async () => {
-   if (!isLogin.value) {
+    if (!isLogin.value) {
        await router.push({name: 'Login'})
-   }
-   await handleGetUserShortLinkInfo()
+    }
+    const query = new GetUserShortLinkQuery()
+    const handler = queryFactory.getQueryHandler(query)
+    await handler.handle(query)
 })
 </script>
 

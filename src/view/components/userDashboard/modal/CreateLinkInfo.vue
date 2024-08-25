@@ -1,17 +1,12 @@
 <script lang="ts" setup>
 
 import {ref, watch} from "vue";
-import {useCreateLinkModalStore} from "@/domain/store/CreateLinkModal.store";
-import {validateAddLinkInfo} from "@/appplication/cqrs/command/AddLinkInfo/AddLinkInfoValidate";
 import AddLinkInfoCommand from "@/appplication/cqrs/command/AddLinkInfo/AddLinkInfoCommand";
-import {useUserInfoStore} from "@/domain/store/UserInfo.store";
 import {storeToRefs} from "pinia";
 import moment from "moment/moment";
-import {handleAddLinkInfo} from "@/appplication/cqrs/command/AddLinkInfo/AddLinkInfoHandler";
 import LinkInfo from "@/domain/model/LinkInfo";
 import {LinkType} from "@/domain/enums/LinkType";
-const createLinkInfoStore = useCreateLinkModalStore()
-const userInfoStore = useUserInfoStore()
+import {commandFactory, createLinkModalStore, userInfoStore} from "@/main";
 const { user, enabledShortLink } = storeToRefs(userInfoStore)
 
 // originalLink
@@ -51,22 +46,24 @@ const addLinkInfo = async () => {
             originalLink.value,
             currentExpire.value,
     )
-    const validateResult = validateAddLinkInfo(command)
+    const validator = commandFactory.getCommandValidator(command)
+    const validateResult = validator.validate(command)
 
     if (!validateResult.isValid) {
-        errorMessage.value = validateResult.errorMessage[0]
+        const errorCode = validateResult.errorCode[0]
+        errorMessage.value = validator.getValidationMessage[errorCode]
         return
     }
 
     // call API to shorten link
+    const handler = commandFactory.getCommandHandler(command)
     try {
-        const linkInfo = await handleAddLinkInfo(command)
+        const linkInfo = await handler.handle(command)
         userInfoStore.addLinkInfo(linkInfo, LinkType.ENABLED)
-        createLinkInfoStore.closeModal()
+        createLinkModalStore.closeModal()
     } catch (e) {
-        console.log(e)
-        errorMessage.value = e.message
-
+        const handlerErrorCode = e.message
+        errorMessage.value = handler.getExceptionMessage(handlerErrorCode)
     }
 }
 
@@ -113,7 +110,7 @@ const addLinkInfo = async () => {
 
             .btn-container
                 button.confirm-btn(type="button" @click="addLinkInfo") 創建
-                button.cancel-btn(type="button" @click="createLinkInfoStore.closeModal()") 取消
+                button.cancel-btn(type="button" @click="createLinkModalStore.closeModal()") 取消
             .message-container(v-if="errorMessage != ''")
                 p.error {{ errorMessage }}
 </template>

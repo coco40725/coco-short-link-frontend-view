@@ -34,7 +34,6 @@ export const useUserInfoStore = defineStore("userInfo", {
         login(){
             try {
                 const token = cookies.get('coco-token')
-                console.log("token", token)
                 const decoded = jwtDecode(token);
                 const id = decoded['id']
                 const name = decoded['name']

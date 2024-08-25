@@ -1,18 +1,12 @@
 <script lang="ts" setup>
 import {computed, onMounted, ref} from "vue";
 import QrcodeVue from 'qrcode.vue'
-import {useToastAlertStore} from "@/domain/store/ToastAlert.store";
 import AddLinkInfoCommand from "@/appplication/cqrs/command/AddLinkInfo/AddLinkInfoCommand";
-import {validateAddLinkInfo} from "@/appplication/cqrs/command/AddLinkInfo/AddLinkInfoValidate";
-import {handleAddLinkInfo} from "@/appplication/cqrs/command/AddLinkInfo/AddLinkInfoHandler";
-import {useToastSuccessStore} from "@/domain/store/ToastSuccess.store";
-import {useUserInfoStore} from "@/domain/store/UserInfo.store";
 import {storeToRefs} from "pinia";
 import QRCodeUtils from "@/infra/Utils/QRCodeUtils";
 import DateUtils from "@/infra/Utils/DateUtils";
-const toastAlertStore = useToastAlertStore()
-const toastSuccessStore = useToastSuccessStore()
-const userInfoStore = useUserInfoStore()
+import {commandFactory, toastAlertStore, toastSuccessStore, userInfoStore} from "@/main";
+
 const { user, isLogin } = storeToRefs(userInfoStore)
 
 
@@ -26,9 +20,13 @@ const shortenLinkBtnAvailable = computed(() => {
 })
 const sendShortenLinkReq = async () => {
     const command = new AddLinkInfoCommand(null, originalLink.value, null)
-    const validateResult = validateAddLinkInfo(command)
+    const validator = commandFactory.getCommandValidator(command)
+    const handler = commandFactory.getCommandHandler(command)
+
+    const validateResult = validator.validate(command)
     if (!validateResult.isValid) {
-        const msg = validateResult.errorMessage[0]
+        const errorCode = validateResult.errorCode[0]
+        const msg = validator.getValidationMessage(errorCode)
         toastAlertStore.setMsg(msg)
         toastAlertStore.openToast()
         return
@@ -36,7 +34,7 @@ const sendShortenLinkReq = async () => {
 
     // call API to shorten link
     try {
-        const result = await handleAddLinkInfo(command)
+        const result = await handler.handle(command)
         shortLinkInfo.value = result
         toastSuccessStore.setMsg("🎉 成功產生 🎉")
         toastSuccessStore.openToast()

@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import {useToastAlertStore} from "@/domain/store/ToastAlert.store";
 import {storeToRefs} from "pinia";
-import {useToastSuccessStore} from "@/domain/store/ToastSuccess.store";
+import {toastSuccessStore} from "@/main";
 
-const toastSuccessStore = useToastSuccessStore()
 const { msg, showToast } = storeToRefs(toastSuccessStore)
 
 </script>

@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import {useToastAlertStore} from "@/domain/store/ToastAlert.store";
 import {storeToRefs} from "pinia";
+import {toastAlertStore} from "@/main";
 
-const toastAlertStore = useToastAlertStore()
 const { msg, showToast } = storeToRefs(toastAlertStore)
 
 </script>
