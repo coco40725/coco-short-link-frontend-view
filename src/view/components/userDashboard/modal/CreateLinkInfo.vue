@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import {ref, watch} from "vue";
-import AddLinkInfoCommand from "@/appplication/cqrs/command/AddLinkInfo/AddLinkInfoCommand";
+import AddLinkInfoCommand from "@/application/cqrs/command/AddLinkInfo/AddLinkInfoCommand";
 import {storeToRefs} from "pinia";
 import moment from "moment/moment";
 import LinkInfo from "@/domain/model/LinkInfo";

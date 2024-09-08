@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {computed, onMounted, ref} from "vue";
 import QrcodeVue from 'qrcode.vue'
-import AddLinkInfoCommand from "@/appplication/cqrs/command/AddLinkInfo/AddLinkInfoCommand";
+import AddLinkInfoCommand from "@/application/cqrs/command/AddLinkInfo/AddLinkInfoCommand";
 import {storeToRefs} from "pinia";
 import QRCodeUtils from "@/infra/Utils/QRCodeUtils";
 import DateUtils from "@/infra/Utils/DateUtils";

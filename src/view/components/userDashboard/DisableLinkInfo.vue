@@ -8,13 +8,13 @@ import {useToastSuccessStore} from "@/domain/store/ToastSuccess.store";
 import DateUtils from "../../../infra/Utils/DateUtils";
 import QrcodeVue from 'qrcode.vue'
 import LinkInfo from "@/domain/model/LinkInfo";
-import ChangeExpireDateCommand from "@/appplication/cqrs/command/ChangeExpireDate/ChangeExpireDateCommand";
+import ChangeExpireDateCommand from "@/application/cqrs/command/ChangeExpireDate/ChangeExpireDateCommand";
 import {LinkType} from "@/domain/enums/LinkType";
 import moment from "moment";
 import '@vuepic/vue-datepicker/dist/main.css';
 import {useRouter} from "vue-router";
 
-import {EnabledLinkInfoCommand} from "@/appplication/cqrs/command/EnabledLinkInfo/EnabledLinkInfoCommand";
+import {EnabledLinkInfoCommand} from "@/application/cqrs/command/EnabledLinkInfo/EnabledLinkInfoCommand";
 import {commandFactory, toastAlertStore, toastSuccessStore, userInfoStore} from "@/main";
 
 const { disabledShortLink, isShortLinkInfoLoaded } = storeToRefs(userInfoStore)

@@ -9,8 +9,8 @@ import {useUserInfoStore} from "@/domain/store/UserInfo.store";
 import {useCreateLinkModalStore} from "@/domain/store/CreateLinkModal.store";
 import {useToastAlertStore} from "@/domain/store/ToastAlert.store";
 import {useToastSuccessStore} from "@/domain/store/ToastSuccess.store";
-import {CommandFactory} from "@/appplication/cqrs/command/base/CommandFactory";
-import {QueryFactory} from "@/appplication/cqrs/query/base/QueryFactory";
+import {CommandFactory} from "@/application/cqrs/command/base/CommandFactory";
+import {QueryFactory} from "@/application/cqrs/query/base/QueryFactory";
 
 
 const pinia = createPinia()

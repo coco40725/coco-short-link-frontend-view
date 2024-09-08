@@ -5,7 +5,7 @@ import {ProviderType} from "@/domain/enums/ProviderType";
 import ToastAlert from "@/view/components/toast/ToastAlert.vue";
 import {useRouter} from "vue-router";
 import {useCookies} from "vue3-cookies";
-import {LoginCommand} from "@/appplication/cqrs/command/Login/LoginCommand";
+import {LoginCommand} from "@/application/cqrs/command/Login/LoginCommand";
 import {commandFactory, toastAlertStore} from "@/main";
 const router = useRouter()
 

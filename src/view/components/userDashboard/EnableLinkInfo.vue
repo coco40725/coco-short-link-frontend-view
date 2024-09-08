@@ -1,17 +1,17 @@
 <script lang="ts" setup>
 import {ref, watch} from "vue";
 import {storeToRefs} from "pinia";
-import ChangeOriginLinkCommand from "@/appplication/cqrs/command/ChangeOriginLink/ChangeOriginLinkCommand";
+import ChangeOriginLinkCommand from "@/application/cqrs/command/ChangeOriginLink/ChangeOriginLinkCommand";
 import QRCodeUtils from "@/infra/Utils/QRCodeUtils";
 import QrcodeVue from 'qrcode.vue'
 import DateUtils from "../../../infra/Utils/DateUtils";
 import LinkInfo from "@/domain/model/LinkInfo";
-import ChangeExpireDateCommand from "@/appplication/cqrs/command/ChangeExpireDate/ChangeExpireDateCommand";
+import ChangeExpireDateCommand from "@/application/cqrs/command/ChangeExpireDate/ChangeExpireDateCommand";
 import {LinkType} from "@/domain/enums/LinkType";
 import moment from "moment";
 import '@vuepic/vue-datepicker/dist/main.css';
 import {useRouter} from "vue-router";
-import {DisabledLinkInfoCommand} from "@/appplication/cqrs/command/DisabledLinkInfo/DisabledLinkInfoCommand";
+import {DisabledLinkInfoCommand} from "@/application/cqrs/command/DisabledLinkInfo/DisabledLinkInfoCommand";
 import {commandFactory, toastSuccessStore, userInfoStore} from "@/main";
 
 const router = useRouter()

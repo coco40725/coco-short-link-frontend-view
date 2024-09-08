@@ -2,8 +2,7 @@
 import {computed, onMounted, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {storeToRefs} from "pinia";
-import {LogoutCommand} from "@/appplication/cqrs/command/Logout/LogoutCommand";
-import {CommandFactory} from "@/appplication/cqrs/command/base/CommandFactory";
+import {LogoutCommand} from "@/application/cqrs/command/Logout/LogoutCommand";
 import {commandFactory, toastAlertStore, userInfoStore} from "@/main";
 const {user, isLogin} = storeToRefs(userInfoStore)
 
@@ -60,13 +59,13 @@ nav.nav-bar
         .logo
             img(src="@/assets/logo.svg" alt="Logo")
         ul.nav-links-container
-            li(v-for="link in links" :key="link.name" @click="clickNav(link.name)" :class="currentNav === `${link.name}` ? 'active': ''")  {{ link.text }}
+            li(v-for="link in links" :key="link.name" :data-key="link.name" @click="clickNav(link.name)" :class="currentNav === `${link.name}` ? 'active': ''")  {{ link.text }}
     .nav-bar-right
         .guest(v-if="!isLogin")
-            span.nav-link(@click="clickNav('Login')") 登入
+            span#login.nav-link(@click="clickNav('Login')") 登入
         .user(v-else)
             span {{ user.name }}
-            span.nav-link(@click="logout") 登出
+            span#logout.nav-link(@click="logout") 登出
 
 
 

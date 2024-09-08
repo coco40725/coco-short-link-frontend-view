@@ -5,9 +5,9 @@ import {computed, onMounted, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import LinkStat from "@/domain/model/LinkStat";
 import DateUtils from "@/infra/Utils/DateUtils";
-import {QueryFactory} from "@/appplication/cqrs/query/base/QueryFactory";
-import {GetUserShortLinkQuery} from "@/appplication/cqrs/query/GetUserShortLinkInfo/GetUserShortLinkQuery";
-import {GetUserLinkStatQuery} from "@/appplication/cqrs/query/GetUserLinkStat/GetUserLinkStatQuery";
+import {QueryFactory} from "@/application/cqrs/query/base/QueryFactory";
+import {GetUserShortLinkQuery} from "@/application/cqrs/query/GetUserShortLinkInfo/GetUserShortLinkQuery";
+import {GetUserLinkStatQuery} from "@/application/cqrs/query/GetUserLinkStat/GetUserLinkStatQuery";
 import {queryFactory} from "@/main";
 
 const router = useRouter()

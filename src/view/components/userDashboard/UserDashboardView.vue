@@ -2,8 +2,8 @@
 import {storeToRefs} from "pinia";
 import {onMounted, ref} from "vue";
 import {useRouter} from "vue-router";
-import {QueryFactory} from "@/appplication/cqrs/query/base/QueryFactory";
-import {GetUserShortLinkQuery} from "@/appplication/cqrs/query/GetUserShortLinkInfo/GetUserShortLinkQuery";
+import {QueryFactory} from "@/application/cqrs/query/base/QueryFactory";
+import {GetUserShortLinkQuery} from "@/application/cqrs/query/GetUserShortLinkInfo/GetUserShortLinkQuery";
 import {createLinkModalStore, userInfoStore} from "@/main";
 import EnableLinkInfo from "@/view/components/userDashboard/EnableLinkInfo.vue";
 import CreateLinkInfo from "@/view/components/userDashboard/modal/CreateLinkInfo.vue";
