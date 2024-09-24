@@ -14,7 +14,7 @@ jobs:
       matrix:
         node-version: 
             - 20.7.0
-    env:
+#    env:
 #      AWS_ACCESS_KEY_ID: ${{ secrets.MATERIAL_AWS_ACCESS_KEY_ID }}
 #      AWS_SECRET_ACCESS_KEY: ${{ secrets.MATERIAL_AWS_SECRET_ACCESS_KEY }}
 
