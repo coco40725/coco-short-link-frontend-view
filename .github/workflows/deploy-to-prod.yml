@@ -1,0 +1,29 @@
+name: prod CD
+
+on:
+  push:
+    tags:
+        - v*
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: 
+            - 20.7.0
+    env:
+#      AWS_ACCESS_KEY_ID: ${{ secrets.MATERIAL_AWS_ACCESS_KEY_ID }}
+#      AWS_SECRET_ACCESS_KEY: ${{ secrets.MATERIAL_AWS_SECRET_ACCESS_KEY }}
+
+    steps:
+        - uses: actions/checkout@v2
+        - name: Use Node.js ${{ matrix.node-version }}
+          uses: actions/setup-node@v1
+          with:
+              node-version: ${{ matrix.node-version }}
+        - run: echo -n '${{ secrets.GCS_CREDENTIALS }}' > ./key/gcp-credentials.json
+        - run: npm install
+        - run: npm run deployTest
