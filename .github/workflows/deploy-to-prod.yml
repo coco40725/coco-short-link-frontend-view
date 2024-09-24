@@ -24,6 +24,7 @@ jobs:
           uses: actions/setup-node@v1
           with:
               node-version: ${{ matrix.node-version }}
+        - run: mkdir -p key
         - run: echo -n '${{ secrets.GCS_CREDENTIALS }}' > ./key/gcp-credentials.json
         - run: npm install
         - run: npm run deployTest
